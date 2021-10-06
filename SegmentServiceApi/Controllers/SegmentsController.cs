@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using SegmentServiceCore.Contracts;
 using SegmentServiceCore.Entities;
 using SegmentServiceCore.Services;
 using System;
@@ -12,45 +13,47 @@ namespace SegmentServiceApi.Model
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class SegmentsController : ControllerBase ,IDisposable
+    public class SegmentsController : ControllerBase, IDisposable
     {
-        private readonly AddSegmentServices seg_service;
+        private readonly ISegmentService seg_service;
         private readonly IMapper mapper;
 
-        public SegmentsController(AddSegmentServices seg_service)
+       
+        public SegmentsController(ISegmentService seg_service, IMapper mapper)
         {
             this.seg_service = seg_service;
+            this.mapper = mapper;
         }
         public void Dispose()
         {
             seg_service.Dispose();
         }
-        [HttpGet("{seg_id}")]
+        [HttpGet("{seg_name}")]
         [ProducesResponseType(200,Type =typeof(SegmentDTO))]
-        public async Task<ActionResult<SegmentDTO>> ListCompanies(int seg_id)
+        public async Task<ActionResult<SegmentDTO>> ListCompanies(string seg_name)
         {
-            var S1 = await seg_service.ViewAllCompanies(seg_id);
+            var S1 = await seg_service.ViewAllCompanies(seg_name);
             var Dto = mapper.Map<SegmentDTO>(S1);
             return Ok(Dto);
         }
 
-        [HttpPost("{seg_id}")]
+        [HttpPost("{seg_name}")]
         [Consumes("application/json")]
         [ProducesResponseType(201)]
-        public async Task<IActionResult> AddCompany(int seg_id, CompanyDTO comdto)
+        public async Task<IActionResult> AddCompany(string seg_name, CompanyDTO comdto)
         {
-            var SegmentItemObj = mapper.Map<Company>(comdto);
-            await seg_service.AddNewCompany(seg_id, SegmentItemObj);
+            var CompanyItemObj = mapper.Map<Company>(comdto);
+            await seg_service.AddNewCompany(seg_name, CompanyItemObj);
             return StatusCode(201);
         }
 
         [HttpPost]
         [Consumes("application/json")]
         [ProducesResponseType(201)]
-        public async Task<IActionResult> AddSegment(SegmentDTO seg_dto)
+        public async Task<IActionResult> AddSegment(string seg_name)
         {
-            var SegmentItemObj = mapper.Map<Segment>(seg_dto);
-            await seg_service.AddNewSegment(SegmentItemObj);
+            //var SegmentItemObj = mapper.Map<Segment>(seg_dto);
+            await seg_service.AddNewSegment(seg_name);
             return StatusCode(201);
         }
 

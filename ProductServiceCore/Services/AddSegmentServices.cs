@@ -15,20 +15,20 @@ namespace SegmentServiceCore.Services
         {
             this.segmentrepo = segmentrepo;
         }
-        public async Task<bool> AddNewCompany(int seg_id,Company item)
+        public async Task<bool> AddNewCompany(string seg_name,Company item)
         {
-            var checkSegment = await segmentrepo.GetAync(obj => obj.SegmentId == seg_id, "comp");
+            var checkSegment = await segmentrepo.GetAync(obj => obj.SegmentName == seg_name, "comp");
             Segment UserSegment = checkSegment.FirstOrDefault();
             if (UserSegment == null)
             {
-                /* UserSegment = new Segment();
+                 UserSegment = new Segment();
                  UserSegment.SegmentName = seg_name;
-                 segmentrepo.Add(UserSegment);*/
-                //AddNewSegment();
+                 segmentrepo.Add(UserSegment);
+               
             }
             else
             {
-                // UserSegment
+                
                 segmentrepo.Update(UserSegment);
             }
             UserSegment.comp.Add(item);
@@ -37,25 +37,25 @@ namespace SegmentServiceCore.Services
             return Rows > 0;
         }
 
-        public async Task<bool> AddNewSegment( Segment seg)
+        public async Task<bool> AddNewSegment( string seg_name)
         {
-            if (seg.SegmentName==null)
-            {
-                throw new ArgumentException("invalid segment name");
-            }
-            segmentrepo.Add(seg);
+            
+            var UserSegment = new Segment();
+            UserSegment.SegmentName = seg_name;
+            segmentrepo.Add(UserSegment);
+            
             int Rows= await segmentrepo.SaveAsync();
             return Rows > 0;
         }
 
         public void Dispose()
         {
-            throw new NotImplementedException();
+            segmentrepo.Dispose();
         }
 
-        public async Task<bool> ViewAllCompanies(int seg_id)
+        public async Task<Segment> ViewAllCompanies(string seg_name)
         {
-            var seg_items = await segmentrepo.GetAync(obj => obj.SegmentId == seg_id, "comp");
+            var seg_items = await segmentrepo.GetAync(obj => obj.SegmentName == seg_name, "comp");
             return seg_items.FirstOrDefault();
         }
     }

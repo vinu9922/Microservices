@@ -64,7 +64,7 @@ namespace StockServices.Api.Controllers
         public async Task<ActionResult> PostStock(StockDTO model)
         {
             var s1 = mapper.Map<Stocks>(model);
-            stockservice.AddStock(s1);
+            await stockservice.AddStock(s1);
             return StatusCode(201);
         }
 

@@ -5,10 +5,10 @@ using System.Threading.Tasks;
 using SegmentServiceCore.Entities;
 namespace SegmentServiceCore.Contracts
 {
-    public interface ISegmentService: IDisposable 
+    public interface ISegmentService : IDisposable
     {
-        Task<bool> AddNewSegment(Segment seg);
-        Task<bool> ViewAllCompanies(int seg_id);
-        Task<bool> AddNewCompany(int seg_id, Company item);
+        Task<bool> AddNewSegment(string seg_name);
+        Task<Segment> ViewAllCompanies(string seg_name);
+        Task<bool> AddNewCompany(string seg_name, Company item);
     }
 }

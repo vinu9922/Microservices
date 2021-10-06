@@ -30,7 +30,7 @@ namespace SegmentService.Infrastructure.Repositories
 
         public void Dispose()
         {
-            throw new NotImplementedException();
+            context.Dispose();
         }
 
         public async Task<IEnumerable<T>> GetAync(Expression<Func<T, bool>> condition = null, string includes = null)
